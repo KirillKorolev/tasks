@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-/******************************************************
-=======
 /*******************************************************
->>>>>>> ba65de489f01f9e81a7e22966ceefa35fe6ff196
+
     Interface of a double connected list and its unit.
 
     @file: task/iface.h
