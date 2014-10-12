@@ -1,7 +1,13 @@
-/**
- * @file: task/iface.h 
- * Interface of a programming task
- */
+/******************************************************
+	Interface of a double connected list and its unit.
+
+	@file: task/iface.h
+	@date: October 7, 2014
+	@author: Kirill Korolev <kirill.korolef@gmail.com>
+	@vertion: 1.0 (October 7, 2014) 
+
+******************************************************/
+
 #include "../Utils/utils_iface.h"
 
 /* namespaces import */
@@ -12,69 +18,69 @@ using namespace Utils;
 #    define DLIST_ASSERTXD(cond, what) ASSERT_XD(cond, "DList", what)
 #endif
 
-// Simple debug assert
+//Simple debug assert
 #if !defined(DLIST_ASSERTD)
 #    define DLIST_ASSERTD(cond) ASSERT_XD(cond, "DList", "")
 #endif
 
-/**
- * Namespace for the programming task
- */
-namespace Task
+namespace Task //< A namespace of the task
 {
-    //
-    // Doubly connected list
-    //
-    template <class T> class DList
+    template <class T> class DList //< Doubly connected list
     {
     public:
-        //
-        // List unit
-        //
-        class Unit
+        class Unit //< List unit class
         {
-        public:
-            // ---- This interface is part of the task ---
-            Unit *next(); // Get the next unit in list
-            Unit *prev(); // Get the previous unit in list
-            T& val();     // Get the reference to the unit's value
-        private:
-        // ---- Implementation routines ----
-        
-            
-        // ---- Data involved in the implementation ----    
-         
+			friend class DList; //The only one that can change Unit class data
+
+        public: //INTERFACE <****************************************************************>	
+			inline Unit *next() { return next_u; } //< Gets the next unit in list             
+            inline Unit *prev() { return prev_u; } //< Gets the previous unit in list        
+            inline T &val() { return u_val; }      //< Gets the reference to the unit's value		
+		private:
+			Unit(): next_u(NULL), prev_u(NULL), u_val(0) {}; //<
+			Unit(const Unit &orig);                          //< Can't use these
+            Unit &operator= (const Unit &orig);              //<
+			void glue(Unit *u); //< Connects doubly u unit to the current one from right
+			// <*****************************************************************************>
+
+			//DATA <*************************************************************************>
+        	Unit *next_u; //< A pointer on a next unit in the list (u = unit)               | 
+            Unit *prev_u; //< A pointer on a previous unit in the list                      |
+			T u_val; //< A value of the current unit                                        |
+			// <*****************************************************************************>
         };
 
-        // ---- Public interface of DList ----
-        DList(); //< Constructor
-        ~DList();//< Destructor
+		//INTERFACE <************************************************************************>
+		DList(); //< A basic constructor: construct an empty list
+        ~DList(); //< A basic destructor
         
-        void push_front (const T& val);       // Insert one unit with given value at front        
-        void pop_front();                     // Remove one unit at front of the list
-        void push_back (const T& val);        // Insert one unit with given value to back
-        void pop_back();                      // Remove one unit from the back of the list
-        Unit* insert (Unit* u, const T& val); // Insert one unit before the given one  
+        void push_front(const T &val);       //< Inserts one unit with given value at front        
+        void pop_front();                    //< Removes one unit at front of the list
+        void push_back(const T &val);        //< Inserts one unit with given value to back
+        void pop_back();                     //< Removes one unit from the back of the list
+        Unit *insert(Unit *u, const T &val); //< Inserts one unit before the given one  
 
-        Unit* first(); // Get first unit
-        Unit* last();  // Get last unit
+        Unit *first(); //< Gets first unit
+        Unit *last();  //< Gets last unit
+		// Gets a unit with num number from a head if it exists
+		Unit *by_num(const int &num);
         
-        Unit* erase (Unit* u); // Remove given unit from list, return next unit or null  
-        void clear();          // Remove all units
-        bool empty();          // Check if list is empty. Returns true if empty, false otherwise
-        unsigned size();       // Get the number of units in the list
-        void reverse();        // Reverse the order of units in the list
-private:
-        // ---- The internal implementation routines ----
-        
-        // ---- The data involved in the implementation ----
-       
+        Unit *erase(Unit *u);               //< Removes given unit, return next unit or null  
+        void clear();                       //< Removes all units
+        inline bool empty() { return size() ? false : true; } //< Check if list is empty
+        inline unsigned size() { return l_size; } //< Gets the number of units in the list
+        void reverse();                     //< Reverses the order of units in the list
+		void dump();                        //< Prints all units from the list
+		// <**********************************************************************************>
+
+	private: //DATA <*************************************************************************>
+		Unit *head; //< An empty unit which points on the first unit                         |
+		Unit *tail; //< An empty unit which points on the last unit                          |
+		unsigned l_size; //< Number of units in the list without a head and a tail (l =list) |
+		// <**********************************************************************************>
     };
 
-    bool uTest( UnitTest *utest_p);
+    bool uTest(UnitTest *utest_p); //< A basic unit test prototype
 };
 
-// Since we have defined list as a template - we should implement the solution in a header
-// But to keep interface clean we've separated the implementation into list_impl.h header
-#include "list_impl.h"
-
+#include "list_impl.h" //< A implementation of the interface

@@ -60,10 +60,9 @@ namespace Task
         UTEST_CHECK( utest_p, list.first()->val() == 10);
         UTEST_CHECK( utest_p, list.first()->next()->val() == 20);
         UTEST_CHECK( utest_p, list.first()->next()->next()->val() == 30);
-        
         UTEST_CHECK( utest_p, list.last()->val() == 40);
-    
 
         return utest_p->result();
+        cout << "!@#\n";
     }
 };
