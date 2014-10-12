@@ -1,4 +1,4 @@
-/******************************************************
+/*******************************************************
 	Interface of a double connected list and its unit.
 
 	@file: task/iface.h
@@ -6,7 +6,7 @@
 	@author: Kirill Korolev <kirill.korolef@gmail.com>
 	@vertion: 1.0 (October 7, 2014) 
 
-******************************************************/
+*******************************************************/
 
 #include "../Utils/utils_iface.h"
 
