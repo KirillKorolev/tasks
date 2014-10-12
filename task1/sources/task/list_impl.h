@@ -12,6 +12,7 @@ namespace Task
 {
     template <class T> void DList<T>::Unit::glue(Unit *u)
     {
+<<<<<<< HEAD
     	DLIST_ASSERTXD(u != NULL, "DList::Unit::glue: a NULL address\n");
 		
 	next_u = u;
@@ -21,12 +22,27 @@ namespace Task
     template <class T> DList<T>::DList():
     l_size(0) {
 	head = new Unit;
+=======
+        DLIST_ASSERTXD(u != NULL, "DList::Unit::glue: a NULL address\n");
+	
+	next_u = u;
+	u->prev_u = this;
+    }
+	
+    template <class T> DList<T>::DList():
+    l_size(0) {
+        head = new Unit;
+>>>>>>> ba65de489f01f9e81a7e22966ceefa35fe6ff196
 	tail = new Unit;
 	head->u_val = 0;
 	tail->u_val = 0;
 	head->prev_u = NULL;
 	tail->next_u = NULL;
+<<<<<<< HEAD
     	head->next_u = tail;
+=======
+	head->next_u = tail;
+>>>>>>> ba65de489f01f9e81a7e22966ceefa35fe6ff196
 	tail->prev_u = head;
     }
 
@@ -37,9 +53,13 @@ namespace Task
 	delete tail;
     }
 
-    template <class T> void	DList<T>::push_front(const T &val)
+    template <class T> void DList<T>::push_front(const T &val)
     {
+<<<<<<< HEAD
         Unit *new_u = new Unit;
+=======
+	Unit *new_u = new Unit;
+>>>>>>> ba65de489f01f9e81a7e22966ceefa35fe6ff196
 	new_u->u_val = val;
 	new_u->glue(head->next());
 	head->glue(new_u);
@@ -91,7 +111,11 @@ namespace Task
 	
     template <class T> inline typename DList<T>::Unit *DList<T>::first()
     {
+<<<<<<< HEAD
     	if (size() > 0) return head->next();
+=======
+	if (size() > 0) return head->next();
+>>>>>>> ba65de489f01f9e81a7e22966ceefa35fe6ff196
         return NULL;
     }
 
@@ -108,13 +132,21 @@ namespace Task
 	
 	Unit *curr = head;
 	for (int i = 0; i < num; i++)
+<<<<<<< HEAD
 	    curr = curr->next();
+=======
+	curr = curr->next();
+>>>>>>> ba65de489f01f9e81a7e22966ceefa35fe6ff196
 	return curr;
     }
 
     template <class T> typename DList<T>::Unit *DList<T>::erase(Unit *u)
     {
+<<<<<<< HEAD
 	DLIST_ASSERTXD(u != NULL, "DList::erase: a NULL address\n");
+=======
+        DLIST_ASSERTXD(u != NULL, "DList::erase: a NULL address\n");
+>>>>>>> ba65de489f01f9e81a7e22966ceefa35fe6ff196
 	DLIST_ASSERTXD(u != tail, "DList::erase: can't erase the tail\n");
 	DLIST_ASSERTXD(u != head, "DList::erase: can't erase the head\n");
 	DLIST_ASSERTXD(size() > 0, "DList::erase: the list is empty\n");
@@ -130,16 +162,29 @@ namespace Task
 
     template <class T> void DList<T>::clear()
     {
+<<<<<<< HEAD
 	DLIST_ASSERTXD(size() > 0, "DList::clear: the list is already empty\n");
 		
 	while (head->next() != tail)
             pop_front(); 
+=======
+        DLIST_ASSERTXD(size() > 0, "DList::clear: the list is already empty\n");
+		
+	Unit *curr = head->next();
+	Unit *next = curr->next();
+	while (curr != tail) {
+	    delete curr;
+	    curr = next;
+	    next = curr->next();
+	}
+>>>>>>> ba65de489f01f9e81a7e22966ceefa35fe6ff196
 	l_size = 0;
     }
 
     template <class T> void DList<T>::reverse()
     {
 	DLIST_ASSERTXD(size() > 0, "DList::reverse: the list is empty\n");
+<<<<<<< HEAD
 		
 	Unit *unit1 = head->next(), *unit2 = tail->prev(); //Two units for replacing
         T tmp = 0;
@@ -151,6 +196,20 @@ namespace Task
 
             unit1 = unit1->next();
             unit2 = unit2->prev();
+=======
+		
+	Unit *unit1 = head->next(), *unit2 = tail->prev(); //Two units for replacing
+	Unit *left_neig = unit2->prev(), *right_neig = unit2->next(); //neighbors of unit2
+		
+	for (int i = 0; i < size() / 2; i++) {
+	    unit1->prev()->glue(unit2); // <--
+	    unit2->glue(unit1->next()); // <-- REPLACING 
+	    left_neig->glue(unit1);     // <--
+	    unit1->glue(right_neig);    // <--
+			
+	    unit1 = unit2->next();
+	    unit2 = left_neig;
+>>>>>>> ba65de489f01f9e81a7e22966ceefa35fe6ff196
 	}
     }
 	
@@ -158,10 +217,17 @@ namespace Task
     {
 	cout << "\nLIST DUMP:\n"
 	     << "Size: " << size() << "\n";
+<<<<<<< HEAD
 		
         if (size() == 0) return;
 				
     	cout << "Units: |HEAD|<->";
+=======
+		
+	if (size() == 0) return;
+		
+	cout << "Units: |HEAD|<->";
+>>>>>>> ba65de489f01f9e81a7e22966ceefa35fe6ff196
 	Unit *curr = head->next();
 	while (curr != tail) {
 	    cout << "|" << curr->val() << "|<->";
