@@ -31,28 +31,29 @@ namespace Task //< A namespace of the task
     public:
         class Unit //< List unit class
         {
-	    friend class DList; //The only one that can change Unit class data
+			friend class DList; //The only one that can change Unit class data
 
         public: //INTERFACE <****************************************************************>	
-	    inline Unit *next() { return next_u; } //< Gets the next unit in list             
+			inline Unit *next() { return next_u; } //< Gets the next unit in list             
             inline Unit *prev() { return prev_u; } //< Gets the previous unit in list        
             inline T &val() { return u_val; }      //< Gets the reference to the unit's value		
-	private:
-	    Unit(): next_u(NULL), prev_u(NULL), u_val(0) {}; //<
-	    Unit(const Unit &orig);                          //< Can't use these
-            Unit &operator= (const Unit &orig);              //<
-	    void glue(Unit *u); //< Connects doubly u unit to the current one from right
-	    // <*****************************************************************************>
+		private:
+			Unit(): next_u(NULL), prev_u(NULL), u_val(0) {}; //<
+			Unit(const Unit &orig);                          //< Can't use these
+			Unit &operator= (const Unit &orig);              //<
+			void glue(Unit *u); //< Connects doubly u unit to the current one from right
+			// <*****************************************************************************>
 
-	    //DATA <*************************************************************************>
-            Unit *next_u; //< A pointer on a next unit in the list (u = unit)               | 
-            Unit *prev_u; //< A pointer on a previous unit in the list                      |
-	    T u_val; //< A value of the current unit                                        |
-	    // <*****************************************************************************>
+		//This section is public only for testing!
+		public: //DATA <*********************************************************************>
+			Unit *next_u; //< A pointer on a next unit in the list (u = unit)               | 
+			Unit *prev_u; //< A pointer on a previous unit in the list                      |
+			T u_val; //< A value of the current unit                                        |
+			// <*****************************************************************************>
         };
 
-	//INTERFACE <************************************************************************>
-	DList(); //< A basic constructor: construct an empty list
+		//INTERFACE <************************************************************************>
+		DList(); //< A basic constructor: construct an empty list
         ~DList(); //< A basic destructor
         
         void push_front(const T &val);       //< Inserts one unit with given value at front        
@@ -63,21 +64,22 @@ namespace Task //< A namespace of the task
 
         Unit *first(); //< Gets first unit
         Unit *last();  //< Gets last unit
-	Unit *by_num(const int &num); //< Gets a unit with num number from a head if it exists
+		Unit *by_num(const int &num); //< Gets a unit with num number from a head if it exists
         
         Unit *erase(Unit *u);               //< Removes given unit, return next unit or null  
         void clear();                       //< Removes all units
         inline bool empty() { return size() ? false : true; } //< Check if list is empty
         inline unsigned size() { return l_size; } //< Gets the number of units in the list
         void reverse();                     //< Reverses the order of units in the list
-	void dump();                        //< Prints all units from the list
-	// <**********************************************************************************>
+		void dump();                        //< Prints all units from the list
+		// <**********************************************************************************>
 
-    private: //DATA <*************************************************************************>
-	Unit *head; //< An empty unit which points on the first unit                         |
-	Unit *tail; //< An empty unit which points on the last unit                          |
-	unsigned l_size; //< Number of units in the list without a head and a tail (l =list) |
-	// <**********************************************************************************>
+	//This section is public only for testing!
+    //private: DATA <*************************************************************************>
+		Unit *head; //< An empty unit which points on the first unit                         |
+		Unit *tail; //< An empty unit which points on the last unit                          |
+		unsigned l_size; //< Number of units in the list without a head and a tail (l =list) |
+		// <**********************************************************************************>
     };
 
     bool uTest(UnitTest *utest_p); //< A basic unit test prototype
