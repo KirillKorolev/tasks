@@ -33,7 +33,7 @@ namespace Task //< A namespace of the task
 		{
 			friend class DList; //The only one that can change Unit class data
 
-		public: //INTERFACE <****************************************************************>
+		public: //INTERFACE <********************************************************************>
 			inline Unit *next() { return next_u; } //< Gets the next unit in list            
 			inline Unit *prev() { return prev_u; } //< Gets the previous unit in list        
 			inline T &val() { return u_val; }      //< Gets the reference to the unit's value
@@ -45,16 +45,17 @@ namespace Task //< A namespace of the task
 			// <*****************************************************************************>
 
 		//This section is public only for testing!
-		public: //DATA <*********************************************************************>
-			Unit *next_u; //< A pointer on a next unit in the list (u = unit)               |
-			Unit *prev_u; //< A pointer on a previous unit in the list                      |
-			T u_val; //< A value of the current unit                                        |
-			// <*****************************************************************************>
+		public: //DATA <***********************************************************>
+			Unit *next_u; //< A pointer on a next unit in the list (u = unit) |
+			Unit *prev_u; //< A pointer on a previous unit in the list        |
+			T u_val; //< A value of the current unit                          |
+			// <***************************************************************>
 		};
 
 		//INTERFACE <************************************************************************>
-		DList(); //< A basic constructor: construct an empty list
-		~DList(); //< A basic destructor
+                // A basic constructor: construct an empty list:
+		inline DList(): l_size (0), head (NULL), tail (NULL) {} 
+		inline ~DList() { clear(); } //< A basic destructor
 
 		void push_front(const T &val);       //< Inserts one unit with given value at front        
 		void pop_front();                    //< Removes one unit at front of the list
@@ -62,12 +63,12 @@ namespace Task //< A namespace of the task
 		void pop_back();                     //< Removes one unit from the back of the list
 		Unit *insert(Unit *u, const T &val); //< Inserts one unit before the given one  
 
-		Unit *first(); //< Gets first unit
-		Unit *last();  //< Gets last unit
+		inline Unit *first() { return head; } //< Gets first unit
+		inline Unit *last()  { return tail; } //< Gets last unit
 		Unit *by_num(const int &num); //< Gets a unit with num number from a head if it exists
 
 		Unit *erase(Unit *u);               //< Removes given unit, return next unit or null  
-		void clear();                       //< Removes all units
+		inline void clear() { while (size()) pop_front(); } //< Removes all units
 		inline bool empty() { return size() ? false : true; } //< Check if list is empty
 		inline unsigned size() { return l_size; } //< Gets the number of units in the list
 		void reverse();                     //< Reverses the order of units in the list
@@ -75,11 +76,11 @@ namespace Task //< A namespace of the task
 		// <**********************************************************************************>
 
 	//This section is public only for testing!
-	//private: DATA <*************************************************************************>
-		Unit *head; //< An empty unit which points on the first unit                         |
-		Unit *tail; //< An empty unit which points on the last unit                          |
-		unsigned l_size; //< Number of units in the list without a head and a tail (l =list) |
-		// <**********************************************************************************>
+	//private: DATA <****************************************************>
+		Unit *head; //< A pointer of the first unit                 |
+		Unit *tail; //< A pointer of the last unit                  |
+		unsigned l_size; //< Number of units in the list (l = list) |
+		// <*********************************************************>
 	};
 
 	bool uTest(UnitTest *utest_p); //< A basic unit test prototype

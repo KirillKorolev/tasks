@@ -13,45 +13,33 @@ namespace Task
 	template <class T> void DList<T>::Unit::glue(Unit *u)
 	{
 		DLIST_ASSERTXD(u != NULL, "DList::Unit::glue: a NULL address\n");
-		
 		next_u = u;
 		u->prev_u = this;
-	}
-	
-	template <class T> DList<T>::DList():
-	l_size(0) {
-		head = new Unit;
-		tail = new Unit;
-		head->u_val = 0;
-		tail->u_val = 0;
-		head->prev_u = NULL;
-		tail->next_u = NULL;
-		head->next_u = tail;
-		tail->prev_u = head;
-	}
-
-	template <class T> DList<T>::~DList()
-	{
-		clear();
-		delete head;
-		delete tail;
 	}
 
 	template <class T> void DList<T>::push_front(const T &val)
 	{
 		Unit *new_u = new Unit;
 		new_u->u_val = val;
-		new_u->glue(head->next());
-		head->glue(new_u);
-		l_size++;
+                if (!size()) {
+                        head = new_u;
+                        tail = new_u;
+                } else {
+                        new_u->glue(head);
+                        head = new_u;
+                }
+                l_size++;
 	}
 
 	template <class T> void DList<T>::pop_front()
 	{
 		DLIST_ASSERTXD(size() > 0, "DList::pop_front: the list is empty\n");
-		
-		Unit *dead = head->next(); //< A unit to remove
-		head->glue(dead->next());
+		Unit *dead = head; //< A unit to remove
+		if (size() == 1)
+                        tail = NULL;
+                head = dead->next();
+                if (head)
+                        head->prev_u = NULL;
 		delete dead;
 		l_size--;
 	}
@@ -60,17 +48,25 @@ namespace Task
 	{
 		Unit *new_u = new Unit;
 		new_u->u_val = val;
-		tail->prev()->glue(new_u);
-		new_u->glue(tail);
+                if (!size()) {
+                        head = new_u;
+                        tail = new_u;
+                } else {
+                        tail->glue(new_u);
+                        tail = new_u;
+                }
 		l_size++;
 	}
 
 	template <class T> void DList<T>::pop_back()
 	{
 		DLIST_ASSERTXD(size() > 0, "DList::pop_back: the list is empty\n");
-		
-		Unit *dead = tail->prev(); //< A unit to remove
-		dead->prev()->glue(tail);
+		Unit *dead = tail; //< A unit to remove
+		if (size() == 1)
+                        head = NULL;
+                tail = dead->prev();
+                if (tail)
+                        tail->next_u = NULL;
 		delete dead;
 		l_size--;
 	}
@@ -78,8 +74,13 @@ namespace Task
 	template <class T> typename DList<T>::Unit *DList<T>::insert(Unit *u, const T &val)
 	{
 		DLIST_ASSERTXD(u != NULL, "DList::insert: NULL address\n");
-		DLIST_ASSERTXD(u != head, "DList::insert: can't insert a unit before the head\n");
-		
+                DLIST_ASSERTXD(size(), "DList::insert: the list is empty\n");
+                
+                if (u == head) {
+                        push_front(val);
+                        return first();
+                }
+                
 		Unit *new_u = new Unit;
 		new_u->u_val = val;
 		u->prev()->glue(new_u);
@@ -88,26 +89,14 @@ namespace Task
 	
 		return new_u;
 	}
-	
-	template <class T> inline typename DList<T>::Unit *DList<T>::first()
-	{
-		if (size() > 0) return head->next();
-		return NULL;
-	}
-
-	template <class T> inline typename DList<T>::Unit *DList<T>::last()
-	{
-		if (size() > 0)	return tail->prev();
-		return NULL;
-	}
 
 	template <class T> typename DList<T>::Unit *DList<T>::by_num(const int &num)
 	{
-		DLIST_ASSERTXD(num <= size(), "DList::by_num: there is no unit with curr. number\n");
-		DLIST_ASSERTXD(num > 0, "DList::by_num: curr. number is not appropriate\n");	
-	
+		if (num > size() || num <= 0)
+                        return NULL;
+
 		Unit *curr = head;
-		for (int i = 0; i < num; i++)
+		for (int i = 0; i < num - 1; i++)
 			curr = curr->next();
 
 		return curr;
@@ -116,63 +105,56 @@ namespace Task
 	template <class T> typename DList<T>::Unit *DList<T>::erase(Unit *u)
 	{
 		DLIST_ASSERTXD(u != NULL, "DList::erase: a NULL address\n");
-		DLIST_ASSERTXD(u != tail, "DList::erase: can't erase the tail\n");
-		DLIST_ASSERTXD(u != head, "DList::erase: can't erase the head\n");
 		DLIST_ASSERTXD(size() > 0, "DList::erase: the list is empty\n");
-		
-		Unit *res = u->next();
-		u->prev()->glue(u->next());
-		delete u;
-		l_size--;
+                
+                Unit *res = u->next();
+                
+                if (u == head)
+                        pop_front();
+                else if (u == tail)
+                        pop_back();
+                else {
+                        u->prev()->glue(u->next());
+                        delete u;
+                        l_size--;
+                }
 
-		if (res == tail) return NULL;
-		else             return res;
-	}
-
-	template <class T> void DList<T>::clear()
-	{
-		DLIST_ASSERTXD(size() > 0, "DList::clear: the list is already empty\n");
-		
-		while (head->next() != tail)
-			pop_front(); 
-
-		l_size = 0;
+		return res;
 	}
 
 	template <class T> void DList<T>::reverse()
 	{
-		DLIST_ASSERTXD(size() > 0, "DList::reverse: the list is empty\n");
-
-		Unit *unit1 = head->next(), *unit2 = tail->prev(); //Two units for replacing
-		
-		for (int i = 0; i < size() / 2; i++) {
-			Unit *neig_r = unit2->next();
-			Unit *neig_l = unit2->prev(); //Two neighbors of unit2
-			if (neig_l == unit1) neig_l = unit2;
-			
-			unit1->prev()->glue(unit2);  //<- REPLACING BY
-			unit2->glue(unit1->next());  //<- ADDRESSES
-			neig_l->glue(unit1);         //<-
-			unit1->glue(neig_r);         //<-
-
-			unit1 = unit2->next();
-			unit2 = neig_l;
-		}
+		Unit **point = new Unit*[size()];
+                Unit *curr = tail;
+                
+                for (int i = 0; i < size(); i++) {
+                        point[i] = curr;
+                        curr = curr->prev();
+                }
+                
+                for (int i = 0; i < size() - 1; i++)
+                        point[i]->glue(point[i + 1]);
+                head = point[0];
+                tail = point[size() - 1];
+                head->prev_u = NULL;
+                tail->next_u = NULL;
+                
+                delete [] point;
 	}
 	
 	template <class T> void DList<T>::dump()
 	{
-		cout << "\nLIST DUMP:\n"
-			 << "Size: " << size() << "\n";
+		cout << "\nLIST DUMP:" << endl
+                     << "Size: " << size() << endl;
 		
-		if (size() == 0) return;
-				
+		if (!size()) return;
+                
 		cout << "Units: |HEAD|<->";
-		Unit *curr = head->next();
-		while (curr != tail) {
+		Unit *curr = head;
+		for (int i = 0; i < size(); i++) {
 			cout << "|" << curr->val() << "|<->";
 			curr = curr->next();
 		}
-		cout << "|TAIL|\n\n";
+		cout << "|TAIL|\n" << endl;
 	}
 };

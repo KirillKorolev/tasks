@@ -33,15 +33,10 @@ namespace Task
         UTEST_CHECK( utest_p, u->val() == 15);
 
         Unit * last = list.erase( u);
+        list.dump();
 
-        //UTEST_CHECK( utest_p, last->next() == 0); 
-        //UTEST_CHECK( utest_p, last->prev() == 0);
-        //These 2 tests are not appropriate for current DList implementation;
-        //replaced with others:
-        UTEST_CHECK(utest_p, last->next() == list.tail);
-        UTEST_CHECK(utest_p, last->prev() == list.head);
-        UTEST_CHECK(utest_p, list.tail->next() == 0);
-        UTEST_CHECK(utest_p, list.head->prev() == 0);
+        UTEST_CHECK( utest_p, last->next() == 0); 
+        UTEST_CHECK( utest_p, last->prev() == 0);
         
         UTEST_CHECK( utest_p, last == list.first());
         UTEST_CHECK( utest_p, last == list.last());
@@ -63,6 +58,8 @@ namespace Task
         list.insert( u, 30); // list: 40 30 20 10
 
         list.reverse(); // list: 10 20 30 40
+
+        list.dump();
 
         UTEST_CHECK( utest_p, list.first()->val() == 10);
         UTEST_CHECK( utest_p, list.first()->next()->val() == 20);
