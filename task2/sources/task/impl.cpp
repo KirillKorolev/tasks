@@ -93,5 +93,5 @@ namespace Task
         UTEST_CHECK(utest_p, sum == 33);
       
         return utest_p->result();
-    }
+    } 
 };

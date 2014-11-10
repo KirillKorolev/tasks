@@ -1,4 +1,4 @@
-build/objects/release/UnitTest/main.o: sources/UnitTest/main.cpp \
+build/objects/debug/UnitTest/main.o: sources/UnitTest/main.cpp \
  sources/UnitTest/utest_impl.h sources/UnitTest/../Utils/utils_iface.h \
  sources/UnitTest/../Utils/host.h sources/UnitTest/../Utils/types.h \
  sources/UnitTest/../Utils/misc.h sources/UnitTest/../Utils/asrt.h \

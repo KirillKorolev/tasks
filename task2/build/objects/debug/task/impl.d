@@ -1,4 +1,4 @@
-build/objects/release/task/impl.o: sources/task/impl.cpp \
+build/objects/debug/task/impl.o: sources/task/impl.cpp \
  sources/task/iface.h sources/task/../Utils/utils_iface.h \
  sources/task/../Utils/host.h sources/task/../Utils/types.h \
  sources/task/../Utils/misc.h sources/task/../Utils/asrt.h \

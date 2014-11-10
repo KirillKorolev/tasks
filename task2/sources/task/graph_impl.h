@@ -15,59 +15,6 @@ namespace Task {
     
     //NODE  <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
     
-   
-    template <class NodeT, class EdgeT> class Graph<NodeT, EdgeT>::Node::pred_iterator
-    {
-        typedef typename list<EdgeT>::iterator EdIterT;
-        EdIterT _iter;
-        
-    public:
-        inline pred_iterator(const EdIterT &basic): _iter(basic) {}
-        
-        inline pred_iterator &operator++()                         { ++_iter; return *this;     }
-        inline bool           operator==(const pred_iterator &rhs) { return _iter == rhs._iter; }
-        inline bool           operator!=(const pred_iterator &rhs) { return _iter != rhs._iter; }
-        inline EdgeT&         operator* ()                         { return *_iter;             }
-    };
-    
-    template <class NodeT, class EdgeT> class Graph<NodeT, EdgeT>::Node::succ_iterator
-    {
-        typedef typename list<EdgeT>::iterator EdIterT;
-        EdIterT _iter;
-        
-    public:
-        inline succ_iterator(const EdIterT &basic): _iter(basic) {}
-        
-        inline succ_iterator &operator++()                         { ++_iter; return *this;     }
-        inline bool           operator==(const succ_iterator &rhs) { return _iter == rhs._iter; }
-        inline bool           operator!=(const succ_iterator &rhs) { return _iter != rhs._iter; }
-        inline EdgeT&         operator* ()                         { return *_iter;             }
-    };
-    
-    template <class NodeT, class EdgeT> typename Graph<NodeT, EdgeT>::Node::pred_iterator Graph<NodeT, EdgeT>::Node::preds_begin()
-    {
-        GRAPH_ASSERTXD(_preds.size(), "Node: preds_begin: no predecessing edges/n");
-        return *_preds.begin();
-    }
-    
-    template <class NodeT, class EdgeT> typename Graph<NodeT, EdgeT>::Node::pred_iterator Graph<NodeT, EdgeT>::Node::preds_end()
-    {
-        GRAPH_ASSERTXD(_preds.size(), "Node: preds_end: no predecessing edges/n");
-        return *_preds.end();
-    }
-    
-    template <class NodeT, class EdgeT> typename Graph<NodeT, EdgeT>::Node::succ_iterator Graph<NodeT, EdgeT>::Node::succs_begin()
-    {
-        GRAPH_ASSERTXD(_succs.size(), "Node: succs_begin: no successing edges/n");
-        return *_succs.begin();
-    }
-    
-    template <class NodeT, class EdgeT> typename Graph<NodeT, EdgeT>::Node::succ_iterator Graph<NodeT, EdgeT>::Node::succs_end()
-    {
-        GRAPH_ASSERTXD(_succs.size(), "Node: succs_end: no successing edges/n");
-        return *_succs.end();
-    }
-    
     template <class NodeT, class EdgeT> EdgeT &Graph<NodeT, EdgeT>::Node::first_pred()
     {
         if (_preds.size())
@@ -92,7 +39,7 @@ namespace Task {
         }
     }
     
-    template <class NodeT, class EdgeT> Graph<NodeT, EdgeT>::Node::Node(Graph &g):
+    template <class NodeT, class EdgeT> Graph<NodeT, EdgeT>::Node::Node(Graph<NodeT, EdgeT> &g):
     _graph(g) {
         GRAPH_ASSERTXD(g._free_id.size(), "Node constructor: no free id values/n");
         
@@ -107,7 +54,7 @@ namespace Task {
     template <class NodeT, class EdgeT> Graph<NodeT, EdgeT>::Edge::Edge(NodeT &p, NodeT &s):
     _graph(p._graph), _pred(p), _succ(s) {
         GRAPH_ASSERTXD(_graph._free_id.size(), "Edge constructor: no free id values/n");
-        GRAPH_ASSERTXD(_graph == s._graph, "Edge constructor: nodes from differnt graphs/n");
+        GRAPH_ASSERTXD(&p._graph == &s._graph, "Edge constructor: nodes from differnt graphs/n");
         
         _id = *_graph._free_id.end();
         _graph._free_id.pop_back();
@@ -116,59 +63,6 @@ namespace Task {
     }
     
     //GRAPH <><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
-    
-    template <class NodeT, class EdgeT> class Graph<NodeT, EdgeT>::node_iterator
-    {
-        typedef typename list<NodeT>::iterator NoIterT;
-        NoIterT _iter;
-        
-    public:
-        inline node_iterator(const NoIterT &basic): _iter(basic) {}
-        
-        inline node_iterator &operator++()                         { ++_iter; return *this;     }
-        inline bool           operator==(const node_iterator &rhs) { return _iter == rhs._iter; }
-        inline bool           operator!=(const node_iterator &rhs) { return _iter != rhs._iter; }
-        inline NodeT          operator* ()                         { return *_iter;             }
-    };
-    
-    template <class NodeT, class EdgeT> class Graph<NodeT, EdgeT>::edge_iterator
-    {
-        typedef typename list<EdgeT>::iterator EdIterT;
-        EdIterT _iter;
-        
-    public:
-        inline edge_iterator(const EdIterT &basic): _iter(basic) {}
-        
-        inline edge_iterator &operator++()                         { ++_iter; return *this;     }
-        inline bool           operator==(const edge_iterator &rhs) { return _iter == rhs._iter; }
-        inline bool           operator!=(const edge_iterator &rhs) { return _iter != rhs._iter; }
-        inline EdgeT          operator* ()                         { return *_iter;             }
-    };
-    
-    
-    template <class NodeT, class EdgeT> typename Graph<NodeT, EdgeT>::node_iterator Graph<NodeT, EdgeT>::nodes_begin()
-    {
-        GRAPH_ASSERTXD(_succs.size(), "Graph: nodes_begin: no nodes in the graph/n");
-        return _nodes.begin();
-    }
-    
-    template <class NodeT, class EdgeT> typename Graph<NodeT, EdgeT>::node_iterator Graph<NodeT, EdgeT>::nodes_end()
-    {
-        GRAPH_ASSERTXD(_succs.size(), "Graph: nodes_end: no nodes in the graph/n");
-        return _nodes.end();
-    }
-    
-    template <class NodeT, class EdgeT> typename Graph<NodeT, EdgeT>::edge_iterator Graph<NodeT, EdgeT>::edges_begin()
-    {
-        GRAPH_ASSERTXD(_succs.size(), "Graph: edges_begin: no edges in the graph/n");
-        return _edges.begin();
-    }
-    
-    template <class NodeT, class EdgeT> typename Graph<NodeT, EdgeT>::edge_iterator Graph<NodeT, EdgeT>::edges_end()
-    {
-        GRAPH_ASSERTXD(_succs.size(), "Graph: edges_end: no edges in the graph/n");
-        return _edges.end();
-    }
     
     template <class NodeT, class EdgeT> NodeT &Graph<NodeT, EdgeT>::create_node()
     {
@@ -207,6 +101,6 @@ namespace Task {
     }
     
     //<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+    
         
-
 }; // namespace Task

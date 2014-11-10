@@ -70,15 +70,38 @@ namespace Task //< Namespace for the programming task
             
         public:
             //Iterator's type for:
-            class pred_iterator; // node's predecessor edges
-            class succ_iterator; // node's successor edges
+            class pred_iterator // node's predecessor edges
+            {
+                typename list<EdgeT>::iterator _iter;
+        
+            public:
+                inline pred_iterator(const typename list<EdgeT>::iterator &basic): _iter(basic) {}
+        
+                inline pred_iterator &operator++()                         { ++_iter; return *this;     }
+                inline bool           operator==(const pred_iterator &rhs) { return _iter == rhs._iter; }
+                inline bool           operator!=(const pred_iterator &rhs) { return _iter != rhs._iter; }
+                inline EdgeT&         operator* ()                         { return *_iter;             }
+            };
+    
+            class succ_iterator // node's successor edges
+            {
+                typename list<EdgeT>::iterator _iter;
+        
+            public:
+                inline succ_iterator(const typename list<EdgeT>::iterator &basic): _iter(basic) {}
+        
+                inline succ_iterator &operator++()                         { ++_iter; return *this;     }
+                inline bool           operator==(const succ_iterator &rhs) { return _iter == rhs._iter; }
+                inline bool           operator!=(const succ_iterator &rhs) { return _iter != rhs._iter; }
+                inline EdgeT&         operator* ()                         { return *_iter;             }
+            };
             
             // INTERFACE ----------------------------------------------------------------------------------//
             // Get the iterator to:                                                                       //
-            pred_iterator preds_begin(); // the first predecessing edge                                  //
-            pred_iterator preds_end();   // the last predecessing edge                                  //
-            succ_iterator succs_begin(); // the first successing edge                                  //
-            succ_iterator succs_end();   // the last successing edge                                  //
+            inline pred_iterator preds_begin() { return *_preds.begin(); } // the first predecessing edge                                  //
+            inline pred_iterator preds_end()   { return *_preds.end();   } // the last predecessing edge                                  //
+            inline succ_iterator succs_begin() { return *_succs.begin(); } // the first successing edge                                  //
+            inline succ_iterator succs_end()   { return *_succs.end();   } // the last successing edge                                  //
                                                                                                      //
             inline Graph& graph() { return _graph; }  // Get the graph reference                    //
             inline UId uid() const { return _id; }    // Get the node's unique id                  //
@@ -91,13 +114,13 @@ namespace Task //< Namespace for the programming task
             inline UInt32 num_preds() const { return _preds.size(); } // predecessors       //
             inline UInt32 num_succs() const { return _succs.size(); } // successors        //
                                                                                           //
-      //  protected:                                                                     //
+        protected:                                                                     //
             Node(Graph &g); // Constructor of the node              //
             virtual ~Node() {};                                                        //
                                                                                       //
-      //  private:                                                                   //
+        private:                                                                   //
             Node();               //<--TURNED------                                 //
-            Node(const Node &n);  //<---------OFF--                                //
+       //   Node(const Node &n);  //<---------OFF--                                //
             //--------------------------------------------------------------------//
             
             // DATA ------------------------------------------------------------//
@@ -126,13 +149,13 @@ namespace Task //< Namespace for the programming task
             inline Graph &graph() { return _graph; } // Get the graph                     //
             inline UId uid() const { return _id; }// Get the edge's unique id            //
                                                                                         //
-      //  protected:                                                                   //
+        protected:                                                                   //
             Edge(NodeT &p, NodeT &s); // Construct an edge between given nodes    //
             virtual ~Edge() {};                                                      //
                                                                                     //
-      //  private:                                                                 //
+        private:                                                                 //
             Edge();               //<--TURNED------                               //
-            Edge(const Edge &e);  //<---------OFF--                              //
+           //Edge(const Edge &e);  //<---------OFF--                              //
             //------------------------------------------------------------------//
         
             // DATA ----------------------------------------------------------//
@@ -151,15 +174,38 @@ namespace Task //< Namespace for the programming task
         
     public: 
         // Iterator's type for:
-        class node_iterator;// the graph's nodes
-        class edge_iterator; // the graph's edges
+        class node_iterator // the graph's nodes
+        {
+            typename list<NodeT>::iterator _iter;
+        
+        public:
+            inline node_iterator(const typename list<NodeT>::iterator &basic): _iter(basic) {}
+        
+            inline node_iterator &operator++()                         { ++_iter; return *this;     }
+            inline bool           operator==(const node_iterator &rhs) { return _iter == rhs._iter; }
+            inline bool           operator!=(const node_iterator &rhs) { return _iter != rhs._iter; }
+            inline NodeT         &operator* ()                         { return *_iter;             }
+        };
+    
+        class edge_iterator // the graph's edges
+        {
+            typename list<EdgeT>::iterator _iter;
+        
+        public:
+            inline edge_iterator(const typename list<EdgeT>::iterator &basic): _iter(basic) {}
+        
+            inline edge_iterator &operator++()                         { ++_iter; return *this;     }
+            inline bool           operator==(const edge_iterator &rhs) { return _iter == rhs._iter; }
+            inline bool           operator!=(const edge_iterator &rhs) { return _iter != rhs._iter; }
+            inline EdgeT         &operator* ()                         { return *_iter;             }
+        };
         
         // INTERFACE ---------------------------------------------------------------------------------------------//
         // Get the iterator to:                                                                                  //
-        node_iterator nodes_begin(); // the first node                                                          //
-        node_iterator nodes_end();   // the last node                                                          //
-        edge_iterator edges_begin(); // the first edge                                                        //
-        edge_iterator edges_end();   // the last edge                                                        //
+        inline node_iterator nodes_begin() { return _nodes.begin(); } // the first node                                                          //
+        inline node_iterator nodes_end()   { return _nodes.end();   } // the last node                                                          //
+        inline edge_iterator edges_begin() { return _edges.begin(); } // the first edge                                                        //
+        inline edge_iterator edges_end()   { return _edges.end();   } // the last edge                                                        //
                                                                                                             //
         inline UInt32 num_nodes() const { return _nodes.size(); } // Get the number of nodes               //
         inline UInt32 num_edges() const { return _edges.size(); } // Get the number of edges              //
@@ -170,12 +216,13 @@ namespace Task //< Namespace for the programming task
         void remove(NodeT &node); // Remove and delete node                                          //
         void remove(EdgeT &edge); // Remove and delete edge                                         //
                                                                                                    //
-        virtual ~Graph() {}; // Destructor, deletes all nodes and edges by list destructor        //
+        inline Graph() { _free_id.push_back(1); }
+        virtual ~Graph() {} // Destructor, deletes all nodes and edges by list destructor        //
         //---------------------------------------------------------------------------------------//
         
         // DATA -------------------------------------------------------------------------------//
         list<UId> _free_id;                                                                   //
-    //private:                                                                               //
+    private:                                                                               //
         list<NodeT> _nodes;                                                                 //
         list<EdgeT> _edges;                                                                //
         //--------------------------------------------------------------------------------//

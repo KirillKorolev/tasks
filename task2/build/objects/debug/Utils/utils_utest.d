@@ -1,4 +1,4 @@
-build/objects/release/Utils/utest.o: sources/Utils/utest.cpp \
+build/objects/debug/Utils/utils_utest.o: sources/Utils/utils_utest.cpp \
  sources/Utils/utils_iface.h sources/Utils/host.h sources/Utils/types.h \
  sources/Utils/misc.h sources/Utils/asrt.h sources/Utils/timer.h \
  sources/Utils/print.h sources/Utils/utest.h sources/Utils/list.h \
