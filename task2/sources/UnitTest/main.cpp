@@ -15,7 +15,10 @@
 int main(int argc, char **argv)
 {
    // Run the example testing
-    RUN_TEST( Task::uTest);
+   RUN_TEST( Task::uTest);
+    
+   // Run my testing...
+    RUN_TEST(Task::my_uTest);
 
     cout.flush();
     cerr.flush();
