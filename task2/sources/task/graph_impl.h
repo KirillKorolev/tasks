@@ -83,7 +83,8 @@ namespace Task {
         int num = (int) node.num_preds();
         for (int i = 0; i < num; i++)
                 remove(*node._preds.front());
-        for (int i = 0; i < (int) node.num_succs(); i++)
+        num = (int) node.num_succs();
+        for (int i = 0; i < num; i++)
                 remove(*node._succs.front());
         _free_id.push_back(node._id);
         _nodes.erase(node._iter);
